@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puntos de Envío - eBanic</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="bg-black text-white px-3 py-2 rounded-xl flex items-center justify-center font-black text-lg tracking-tight border-2 border-black select-none">
+                    eB
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight text-slate-900 sm:text-xl uppercase">eBanic</h1>
+                    <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span> Sistema de envío paquetería casa blanca
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+        <!-- Main Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Panel: Form & Payment Info (5 cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Step 1: Client Data Form -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                    <div class="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                        <span class="bg-blue-800 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+                        <h3 class="text-base font-bold text-slate-900">Tus Datos de Envío</h3>
+                    </div>
+                    
+                    <form id="orderForm" class="space-y-4" onsubmit="event.preventDefault();">
+                        <!-- Nombre -->
+                        <div>
+                            <label for="clientName" class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">Nombre Completo *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-user text-sm"></i>
+                                </span>
+                                <input type="text" id="clientName" name="clientName" required
+                                       class="block w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-800 focus:bg-white transition"
+                                       placeholder="Ej. Juan Pérez">
+                            </div>
+                        </div>
+
+                        <!-- Teléfono de contacto -->
+                        <div>
+                            <label for="clientPhone" class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">WhatsApp de Contacto *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-phone text-sm"></i>
+                                </span>
+                                <input type="tel" id="clientPhone" name="clientPhone" required
+                                       class="block w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-800 focus:bg-white transition"
+                                       placeholder="Ej. 3312345678">
+                            </div>
+                        </div>
+
+                        <!-- Nombre del Artículo -->
+                        <div>
+                            <label for="articleName" class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1.5">Artículo a Enviar *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-box text-sm"></i>
+                                </span>
+                                <input type="text" id="articleName" name="articleName" required
+                                       class="block w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-800 focus:bg-white transition"
+                                       placeholder="Ej. Tenis Blancos Talla 27">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Payment Info (BBVA Blue Inspired Design - Light Theme) -->
+                <div id="paymentSection" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i class="fa-solid fa-wallet text-blue-800 text-lg"></i>
+                        <h3 class="text-base font-bold text-slate-900">⚠️ Aviso Importante y Datos de Pago</h3>
+                    </div>
+
+                    <!-- Instructions list -->
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+                                1
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-slate-900">Realiza tu pago</p>
+                                <p class="text-slate-600 mt-0.5">Monto total: <strong class="text-slate-950">Costo de tu artículo + $20.00 MXN</strong> por concepto de envío obligatorio.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="bg-blue-100 text-blue-800 w-6 h-6 rounded-full flex items-center justify-center font-extrabold text-xs shrink-0 mt-0.5">
+                                2
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-slate-900">Envía la foto de tu comprobante por WhatsApp</p>
+                                <p class="text-slate-600 mt-0.5">Al abrir WhatsApp, envía la foto del comprobante para confirmar y procesar de inmediato tu envío.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods Section (BBVA Blue Light Aesthetic) -->
+                    <div class="bg-blue-50/60 border border-blue-100 rounded-2xl p-4 space-y-3">
+                        <div class="flex items-center gap-2 pb-2 border-b border-blue-100/70">
+                            <i class="fa-solid fa-credit-card text-blue-800"></i>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-800">Método de Pago Autorizado</span>
+                        </div>
+                        
+                        <div>
+                            <p class="text-[11px] text-slate-600 font-medium">Paga en OXXO o transferencia desde tu App Bancaria:</p>
+                            <p class="font-extrabold text-blue-800 text-xs mt-1 flex items-center gap-1.5">
+                                <span class="bg-blue-800 text-white text-[9px] px-1.5 py-0.5 rounded font-black tracking-wider">BBVA</span>
+                                Banco BBVA Bancomer
+                            </p>
+                        </div>
+
+                        <!-- Account Card Box -->
+                        <div class="bg-white border border-blue-200/60 rounded-xl p-3 flex items-center justify-between gap-3 shadow-sm">
+                            <div class="min-w-0">
+                                <span class="block text-[9px] uppercase font-bold text-slate-500 tracking-wider">Número de Tarjeta</span>
+                                <span class="text-sm sm:text-base font-mono font-bold text-blue-800 tracking-wider block truncate" id="bbvaCard">4152-3144-8467-6336</span>
+                            </div>
+                            <button onclick="copyBBVACard()" class="bg-blue-800 hover:bg-blue-900 text-white px-3 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1 shrink-0 select-none">
+                                <i class="fa-solid fa-copy"></i>
+                                <span id="copyBtnText">Copiar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Warning banner -->
+                    <div class="bg-rose-50 border border-rose-100 text-rose-800 p-3 rounded-xl text-[11px] flex items-start gap-2">
+                        <i class="fa-solid fa-circle-exclamation text-rose-500 text-sm shrink-0 mt-0.5"></i>
+                        <p class="leading-relaxed"><strong>¡Atención!</strong> Si no envías tu comprobante junto al mensaje automático, tu envío no podrá ser procesado ni colocado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Branch Selection & Submission (7 cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Step 2 Box -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-100 mb-5">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-blue-800 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900">Elige tu Sucursal de Envío</h3>
+                                <p class="text-xs text-slate-500">Haz clic en la sucursal donde deseas recibir tu envío.</p>
+                            </div>
+                        </div>
+                        <div class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium" id="branchCounter">
+                            11 sucursales disponibles
+                        </div>
+                    </div>
+
+                    <!-- Filter Controls & Search -->
+                    <div class="space-y-3 mb-5">
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 pointer-events-none">
+                                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                            </span>
+                            <input type="text" id="branchSearch" oninput="filterBranches()"
+                                   class="block w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-800 focus:bg-white transition"
+                                   placeholder="Buscar por nombre, dirección o municipio...">
+                        </div>
+                        
+                        <!-- Filter chips -->
+                        <div class="flex flex-wrap gap-1.5" id="filterContainer">
+                            <button onclick="setFilter('TODAS')" class="filter-btn active text-xs px-3 py-1.5 rounded-lg font-semibold border transition" data-filter="TODAS">Todas</button>
+                            <button onclick="setFilter('GUADALAJARA')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition" data-filter="GUADALAJARA">Guadalajara</button>
+                            <button onclick="setFilter('ZAPOPAN')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition" data-filter="ZAPOPAN">Zapopan</button>
+                            <button onclick="setFilter('TLAQUEPAQUE')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition" data-filter="TLAQUEPAQUE">Tlaquepaque</button>
+                            <button onclick="setFilter('TONALA')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition" data-filter="TONALA">Tonalá</button>
+                            <button onclick="setFilter('TLAJOMULCO')" class="filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition" data-filter="TLAJOMULCO">Tlajomulco</button>
+                        </div>
+                    </div>
+
+                    <!-- Branches Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[460px] overflow-y-auto pr-1 custom-scroll" id="branchesGrid">
+                        <!-- Dynamic branch elements loaded here via JS -->
+                    </div>
+                </div>
+
+                <!-- Submit Section & Selected Branch Info -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+                    <!-- Dynamic Live selected branch indicator (BBVA Blue theme) -->
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-3 flex items-start gap-3">
+                        <span class="bg-blue-800 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                            <i class="fa-solid fa-location-crosshairs text-sm"></i>
+                        </span>
+                        <div class="text-xs min-w-0">
+                            <span class="block text-slate-400 uppercase font-bold text-[9px] tracking-wider">Sucursal Seleccionada para enviar:</span>
+                            <p class="font-extrabold text-blue-900 text-sm mt-0.5 truncate" id="selectedBranchName">Ninguna seleccionada</p>
+                            <p class="text-slate-600 text-[11px] truncate mt-0.5 italic" id="selectedBranchAddr">Por favor, haz clic en una sucursal de la lista de arriba.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                        <div class="text-center sm:text-left">
+                            <p class="text-xs font-semibold text-slate-500">¿Revisaste las instrucciones de pago?</p>
+                            <p class="text-sm font-bold text-slate-900">Se enviará la información a WhatsApp</p>
+                        </div>
+                        <button type="button" onclick="validateAndProcess()"
+                                class="w-full sm:w-auto bg-blue-800 hover:bg-blue-900 text-white font-bold text-base px-8 py-3.5 rounded-xl transition duration-150 flex items-center justify-center gap-2 shadow-md shadow-blue-800/20 active:scale-[0.98]">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            Confirmar y Enviar Pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal (Before sending) -->
+    <div id="confirmationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 p-6 transform scale-95 transition-transform duration-300 ease-out" id="modalContainer">
+            <div class="text-center mb-5">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 text-blue-800 mb-3">
+                    <i class="fa-solid fa-circle-question text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 leading-tight">¿Tus datos son correctos?</h3>
+                <p class="text-xs text-slate-500 mt-1">Por favor verifica la información antes de enviar tu solicitud.</p>
+            </div>
+
+            <!-- Resumen de datos ingresados -->
+            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs text-slate-700 mb-6">
+                <div>
+                    <span class="block text-[10px] uppercase font-bold text-slate-400">Nombre del Cliente</span>
+                    <p class="font-bold text-slate-900 text-sm mt-0.5" id="summaryName">-</p>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase font-bold text-slate-400">WhatsApp de contacto</span>
+                    <p class="font-mono text-slate-900 font-semibold mt-0.5" id="summaryPhone">-</p>
+                </div>
+                <div>
+                    <span class="block text-[10px] uppercase font-bold text-slate-400">Artículo a Enviar</span>
+                    <p class="font-semibold text-slate-900 mt-0.5" id="summaryArticle">-</p>
+                </div>
+                <div class="border-t border-slate-200/60 pt-2.5 mt-2.5">
+                    <span class="block text-[10px] uppercase font-bold text-slate-400">Sucursal de Destino</span>
+                    <p class="font-extrabold text-blue-800 text-sm mt-0.5" id="summaryBranch">-</p>
+                    <p class="text-[11px] text-slate-500 italic mt-0.5" id="summaryBranchAddr">-</p>
+                </div>
+            </div>
+
+            <!-- Botones de Acción del Modal -->
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="closeConfirmationModal()" 
+                        class="px-4 py-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-semibold text-xs rounded-xl transition">
+                    Revisar y editar
+                </button>
+                <button type="button" onclick="proceedToWhatsApp()" 
+                        class="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    Sí, enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <p class="font-bold text-slate-300">eBanic — Sistema de envío paquetería Casa Blanca &copy; 2026</p>
+            <p class="text-xs text-slate-500 max-w-xl mx-auto">
+                Este sitio es un asistente de envíos para facilitar la entrega de comprobantes de pago e información de entregas en sucursales autorizadas del mapa oficial de oficinas.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Database extracted from image "CB OFICINAS_.jpeg"
+        const branches = [
+            {
+                id: "MATRIZ_JUAREZ",
+                name: "MATRIZ JUAREZ",
+                municipality: "GUADALAJARA",
+                address: "Pedro Moreno #776-B, Centro Guadalajara",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 8:00 pm",
+                    saturday: "Sábado 10:00 am - 5:00 pm",
+                    sunday: "Domingo 11:00 am - 3:00 pm"
+                }
+            },
+            {
+                id: "NORTE",
+                name: "NORTE",
+                municipality: "ZAPOPAN",
+                address: "Calzada Federalismo #690, Auditorio Zapopan",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 8:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "ZAPOPAN",
+                name: "ZAPOPAN",
+                municipality: "ZAPOPAN",
+                address: "Av. Hidalgo #241, Centro Zapopan",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 7:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "SUR",
+                name: "SUR",
+                municipality: "TLAQUEPAQUE",
+                address: "Av. Cristobal Colon #6020, Sta María Tequepexpan, Tlaquepaque",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 7:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "TETLAN",
+                name: "TETLAN",
+                municipality: "GUADALAJARA",
+                address: "Av. Presa Laurel #118 L4, En gasolinera Pemex, Tetlán Gdl",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 6:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "TLAJOMULCO",
+                name: "TLAJOMULCO",
+                municipality: "TLAJOMULCO",
+                address: "Centro comercial San Sebastián #1915-1, Local F2, arriba de Coppel",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 6:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "OBLATOS",
+                name: "OBLATOS",
+                municipality: "GUADALAJARA",
+                address: "Av. Artesanos #1135, Circunvalación Oblatos, Guadalajara",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 7:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "TONALA",
+                name: "TONALA",
+                municipality: "TONALA",
+                address: "Nicolás Bravo #40 D, Centro Tonalá",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 6:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "TESISTAN",
+                name: "TESISTAN",
+                municipality: "ZAPOPAN",
+                address: "Av. Palmas #3420, Palermo Zapopan",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 7:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "PARIAN_TLQ",
+                name: "PARIAN TLQ",
+                municipality: "TLAQUEPAQUE",
+                address: "Plaza Cumbres, Av. Río Nilo 2329 Local 2 PB, Entrada por Ramón López V",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 6:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            },
+            {
+                id: "AVIACION",
+                name: "AVIACION",
+                municipality: "ZAPOPAN",
+                address: "Av. Base aérea #980, Nuevo Mexico Zapopan",
+                schedule: {
+                    weekdays: "Lunes a Viernes 11:00 am - 7:00 pm",
+                    saturday: "Sábado 11:00 am - 5:00 pm",
+                    sunday: null
+                }
+            }
+        ];
+
+        let selectedBranchId = null;
+        let activeFilter = 'TODAS';
+
+        window.onload = function() {
+            renderBranches();
+            setFilter('TODAS');
+        };
+
+        function renderBranches() {
+            const grid = document.getElementById('branchesGrid');
+            const searchVal = document.getElementById('branchSearch').value.toLowerCase();
+            grid.innerHTML = '';
+
+            const filtered = branches.filter(branch => {
+                const matchesFilter = activeFilter === 'TODAS' || branch.municipality === activeFilter;
+                const matchesSearch = branch.name.toLowerCase().includes(searchVal) || 
+                                      branch.address.toLowerCase().includes(searchVal) ||
+                                      branch.municipality.toLowerCase().includes(searchVal);
+                return matchesFilter && matchesSearch;
+            });
+
+            document.getElementById('branchCounter').textContent = `${filtered.length} ${filtered.length === 1 ? 'sucursal' : 'sucursales'} filtrada(s)`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-1 md:col-span-2 py-10 text-center text-slate-400">
+                        <i class="fa-solid fa-map-pin text-3xl mb-2"></i>
+                        <p class="text-sm">No encontramos sucursales que coincidan con tu búsqueda.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(branch => {
+                const isSelected = selectedBranchId === branch.id;
+                const card = document.createElement('div');
+                card.id = `card-${branch.id}`;
+                card.className = `border rounded-2xl p-4 cursor-pointer transition-all duration-200 relative overflow-hidden flex flex-col justify-between ${
+                    isSelected 
+                    ? 'border-blue-600 bg-blue-50/50 ring-2 ring-blue-500/20 shadow-sm' 
+                    : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'
+                }`;
+                card.onclick = () => selectBranch(branch.id);
+
+                let scheduleHtml = `
+                    <p class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-1.5">
+                        <i class="fa-solid fa-clock text-[10px] text-slate-400 w-3"></i>
+                        <span>${branch.schedule.weekdays}</span>
+                    </p>
+                    <p class="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5">
+                        <i class="fa-solid fa-calendar text-[10px] text-slate-400 w-3"></i>
+                        <span>${branch.schedule.saturday}</span>
+                    </p>
+                `;
+                
+                // Sunday Schedule: Defaults to standard text color, turns blue if selected
+                if (branch.schedule.sunday) {
+                    const sundayColor = isSelected ? 'text-blue-700 font-bold' : 'text-slate-500';
+                    const sundayIconColor = isSelected ? 'text-blue-500' : 'text-slate-400';
+                    scheduleHtml += `
+                        <p class="text-[11px] ${sundayColor} flex items-center gap-1.5 mt-0.5">
+                            <i class="fa-solid fa-clock text-[10px] ${sundayIconColor} w-3"></i>
+                            <span>${branch.schedule.sunday}</span>
+                        </p>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div>
+                        <!-- Title & Pin -->
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                                <span class="bg-slate-100 text-slate-700 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mb-1 inline-block">
+                                    ${branch.municipality}
+                                </span>
+                                <h4 class="font-extrabold text-sm text-slate-900 tracking-tight">${branch.name}</h4>
+                            </div>
+                            <span class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                                isSelected ? 'bg-blue-800 text-white' : 'bg-slate-100 text-slate-400'
+                            }">
+                                <i class="fa-solid ${isSelected ? 'fa-circle-check' : 'fa-circle'} text-sm"></i>
+                            </span>
+                        </div>
+
+                        <!-- Address -->
+                        <p class="text-xs text-slate-600 leading-relaxed mb-2 flex items-start gap-1">
+                            <i class="fa-solid fa-location-dot text-slate-400 mt-0.5 shrink-0 text-[11px]"></i>
+                            <span>${branch.address}</span>
+                        </p>
+                    </div>
+
+                    <!-- Hours/Schedule details -->
+                    <div class="border-t border-slate-100 pt-2 mt-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Horarios</span>
+                        ${scheduleHtml}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function selectBranch(id) {
+            selectedBranchId = id;
+            
+            // Re-render branches to visually update borders and sunday text color
+            renderBranches();
+
+            // Find selected branch object
+            const branch = branches.find(b => b.id === id);
+            if (branch) {
+                document.getElementById('selectedBranchName').textContent = branch.name;
+                document.getElementById('selectedBranchAddr').textContent = branch.address;
+            }
+        }
+
+        function setFilter(municipality) {
+            activeFilter = municipality;
+            
+            // Update chip UI (Blue theme)
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.filter === municipality) {
+                    btn.className = "filter-btn active text-xs px-3 py-1.5 rounded-lg font-semibold bg-blue-800 border-blue-800 text-white shadow-sm transition";
+                } else {
+                    btn.className = "filter-btn text-xs px-3 py-1.5 rounded-lg font-semibold border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition";
+                }
+            });
+
+            renderBranches();
+        }
+
+        function filterBranches() {
+            renderBranches();
+        }
+
+        function copyBBVACard() {
+            const cardNum = "4152-3144-8467-6336";
+            
+            // Clipboard Fallback using dynamic textarea
+            const textarea = document.createElement("textarea");
+            textarea.value = cardNum;
+            textarea.style.position = "fixed";  // Avoid scrolling to bottom
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const btnText = document.getElementById('copyBtnText');
+                    btnText.textContent = "¡Copiado!";
+                    btnText.classList.add('text-amber-300');
+                    setTimeout(() => {
+                        btnText.textContent = "Copiar";
+                        btnText.classList.remove('text-amber-300');
+                    }, 2500);
+                    showToast("Número de tarjeta BBVA copiado al portapapeles.");
+                } else {
+                    showToast("No se pudo copiar, por favor cópialo manualmente.");
+                }
+            } catch (err) {
+                showToast("Error al copiar número de tarjeta.");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function validateAndProcess() {
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const article = document.getElementById('articleName').value.trim();
+
+            if (!name) {
+                showToast("Por favor ingresa tu Nombre Completo.");
+                document.getElementById('clientName').focus();
+                return;
+            }
+            if (!phone) {
+                showToast("Por favor ingresa tu WhatsApp de Contacto.");
+                document.getElementById('clientPhone').focus();
+                return;
+            }
+            if (!article) {
+                showToast("Por favor ingresa el nombre del Artículo a enviar.");
+                document.getElementById('articleName').focus();
+                return;
+            }
+            if (!selectedBranchId) {
+                showToast("Por favor elige una Sucursal de Envío en la lista.");
+                document.getElementById('branchesGrid').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // Open Confirmation Modal with collected details
+            openConfirmationModal();
+        }
+
+        function openConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            const container = document.getElementById('modalContainer');
+            
+            // Fill details in summary
+            document.getElementById('summaryName').textContent = document.getElementById('clientName').value.trim();
+            document.getElementById('summaryPhone').textContent = document.getElementById('clientPhone').value.trim();
+            document.getElementById('summaryArticle').textContent = document.getElementById('articleName').value.trim();
+            
+            const branch = branches.find(b => b.id === selectedBranchId);
+            if (branch) {
+                document.getElementById('summaryBranch').textContent = branch.name;
+                document.getElementById('summaryBranchAddr').textContent = branch.address;
+            }
+
+            // Show animation
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            const container = document.getElementById('modalContainer');
+            
+            modal.classList.add('opacity-0');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function proceedToWhatsApp() {
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const article = document.getElementById('articleName').value.trim();
+            
+            const branch = branches.find(b => b.id === selectedBranchId);
+            
+            if (!branch) {
+                showToast("Ocurrió un error. Elige tu sucursal de nuevo.");
+                closeConfirmationModal();
+                return;
+            }
+
+            const whatsappNumber = "523318297670";
+            const textMessage = 
+`📦 *SOLICITUD DE ENVÍO - eBanic*
+*Sistema de envío paquetería casa blanca*
+----------------------------------------
+👤 *Cliente:* ${name}
+📞 *Teléfono:* ${phone}
+🛒 *Artículo:* ${article}
+🚚 *Envío Obligatorio:* $20.00 MXN
+
+----------------------------------------
+📍 *SUCURSAL DE ENVÍO:*
+🏢 *${branch.name}*
+📌 *Dirección:* ${branch.address}
+⏰ *Horarios:* 
+• Lun-Vie: ${branch.schedule.weekdays.replace('Lunes a Viernes ', '')}
+• Sáb: ${branch.schedule.saturday.replace('Sábado ', '')}${branch.schedule.sunday ? '\n• Dom: ' + branch.schedule.sunday.replace('Domingo ', '') : ''}
+
+----------------------------------------
+⚠️ *Nota de Pago:* Ya realicé mi transferencia/depósito de (Costo del artículo + $20.00 envío) a la cuenta de BBVA. A continuación adjunto el comprobante de pago oficial.`;
+
+            const encodedText = encodeURIComponent(textMessage);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedText}`;
+            
+            // Redirect user in new window/tab
+            window.open(whatsappUrl, '_blank');
+            closeConfirmationModal();
+        }
+
+        // Toast Helper (Replaces system alerts)
+        function showToast(message) {
+            // Remove previous toasts if any
+            const existingToast = document.getElementById('appToast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.id = 'appToast';
+            toast.className = 'fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs sm:text-sm px-5 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2.5 transition-all duration-300 transform translate-y-10 opacity-0 max-w-[90vw] text-center font-medium';
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-info text-blue-400"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            }, 50);
+
+            // Animate Out & Destroy
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
