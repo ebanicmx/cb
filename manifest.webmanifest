@@ -1,0 +1,10 @@
+{
+  "name":"BANIC MX",
+  "short_name":"BANIC MX",
+  "start_url":"./index.html",
+  "display":"standalone",
+  "background_color":"#f4f7fb",
+  "theme_color":"#0755c9",
+  "description":"Agenda entregas personales y envíos por Paquetería Casa Blanca.",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
